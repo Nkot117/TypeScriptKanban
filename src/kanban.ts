@@ -19,8 +19,8 @@ class TaskForm {
         event.preventDefault();
 
         const task = this.createTask();
-        console.log(task);
-
+        const item = new TaskItem("#task-item-template", task);
+        item.mount("#todo");
         this.clearInputs();
     }
 
@@ -80,7 +80,7 @@ class TaskList {
         this.element.querySelector("h2")!.textContent = this.taskStatus;
 
         // id属性を設定
-        this.element.querySelector("ul")!.id = `$(this.taskStatus)`;
+        this.element.querySelector("ul")!.id = `${this.taskStatus}`;
     }
 
     mount(selector: string) {
@@ -99,3 +99,56 @@ TASK_STATUS.forEach((status) => {
     const list = new TaskList("#task-list-template", status);
     list.mount("#container");
 });
+
+class TaskItem {
+    templateElement: HTMLTemplateElement;
+    element: HTMLElement;
+    task: Task;
+
+    constructor(templateId: string, _task: Task) {
+        this.templateElement = document.querySelector(templateId) as HTMLTemplateElement;
+        const templateClone = this.templateElement.content.cloneNode(true) as DocumentFragment;
+        this.element = templateClone.firstElementChild as HTMLElement;
+        this.task = _task;
+
+        this.setup();
+        this.bindEvents();        
+    }
+
+    mount(selector: string) {
+        const targetElement = document.querySelector(selector);
+        console.log(targetElement);
+        targetElement?.insertAdjacentElement("beforeend", this.element);
+    }
+
+    setup() {
+        this.element.querySelector("h2")!.textContent = `${this.task.title}`;
+        this.element.querySelector("p")!.textContent = `${this.task.description}`;
+    }
+
+    clickHandler(){
+        console.log("click");
+        if(!this.element.parentElement)  return;
+
+        const currentListId = this.element.parentElement.id as TaskStatus;
+        const taskStatusIdx = TASK_STATUS.indexOf(currentListId);
+
+        if(taskStatusIdx == -1){
+            throw new Error("invalid task status");
+        }
+
+        const nextListId = TASK_STATUS[taskStatusIdx + 1] as TaskStatus;
+
+        if(nextListId) {
+            const newstListElement = document.querySelector(`#${nextListId}`) as HTMLUListElement;
+            newstListElement.appendChild(this.element);
+            return;
+        }
+
+        this.element.remove();
+    }
+
+    bindEvents() {
+        this.element.addEventListener("click", this.clickHandler.bind(this));
+    }
+}
