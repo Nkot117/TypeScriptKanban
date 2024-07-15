@@ -12,27 +12,39 @@ class TaskForm {
         this.descriptionInputElement = document.querySelector("#form-description") as HTMLInputElement;
 
         // イベントリスナーの登録
-        this.bindEvents()
+        this.bindEvents();
     }
 
     private submitHandler(event: Event) {
         event.preventDefault();
         
-        console.log(this.titleInputElement.value);
-        console.log(this.descriptionInputElement.value);
+        const task = this.createTask();
+        console.log(task);
 
         this.clearInputs();
     }
 
     private bindEvents() {
         // bindメソッドを使って、submitHandlerメソッド内のthisがTaskFormクラスのインスタンスを指すようにする
-        this.element.addEventListener("submit", this.submitHandler.bind(this))  ;
+        this.element.addEventListener("submit", this.submitHandler.bind(this));
     }
 
     private clearInputs() {
         this.titleInputElement.value = "";
         this.descriptionInputElement.value = "";
     }
+
+    private createTask(): Task {
+        return {
+            title: this.titleInputElement.value,
+            description: this.descriptionInputElement.value
+        };
+    }
+}
+
+interface Task {
+    title: string;
+    description?: string;
 }
 
 new TaskForm();
