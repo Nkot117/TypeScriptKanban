@@ -1,0 +1,16 @@
+{
+  "name": "typescriptkanban",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^14.2.3",
+    "typescript": "^5.2.2"
+  }
+}
