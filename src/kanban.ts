@@ -20,11 +20,18 @@ class TaskForm {
         
         console.log(this.titleInputElement.value);
         console.log(this.descriptionInputElement.value);
+
+        this.clearInputs();
     }
 
     private bindEvents() {
         // bindメソッドを使って、submitHandlerメソッド内のthisがTaskFormクラスのインスタンスを指すようにする
         this.element.addEventListener("submit", this.submitHandler.bind(this))  ;
+    }
+
+    private clearInputs() {
+        this.titleInputElement.value = "";
+        this.descriptionInputElement.value = "";
     }
 }
 
